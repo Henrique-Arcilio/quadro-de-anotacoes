@@ -1,0 +1,6 @@
+spring:
+    application:
+        name: teste
+    data:
+        mongodb:
+            uri: mongodb://localhost/projeto-anotacoes
