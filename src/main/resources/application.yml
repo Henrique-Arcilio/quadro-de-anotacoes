@@ -1,6 +1,11 @@
 spring:
     application:
         name: teste
+
     data:
         mongodb:
             uri: mongodb://localhost/projeto-anotacoes
+
+logging:
+    level:
+        org.springframework.data.mongodb.core.MongoTemplate: DEBUG
