@@ -29,7 +29,6 @@ public class AnotacaoController {
         anotacao.setId(UUID.randomUUID().toString());
         Quadro quadro = quadroService.findById(idQuadro);
         quadro.getAnotacoes().add(anotacao);
-
         AnotacaoHistorico historico = AnotacaoMapper.toHistorico(anotacao);
         historico.setIdQuadro(quadro.getId());
         historico.setVersao(1);
@@ -47,7 +46,7 @@ public class AnotacaoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable String idQuadro,@PathVariable String id, @RequestBody AnotacaoUpdateDto anotacaoUpdateDto){
+    public ResponseEntity<Void> atualizar(@PathVariable String idQuadro, @PathVariable String id, @RequestBody AnotacaoUpdateDto anotacaoUpdateDto){
         Quadro quadro = quadroService.findById(idQuadro);
         List<Anotacao> anotacoes = quadro.getAnotacoes();
         AnotacaoHistorico historico = null;
@@ -67,9 +66,18 @@ public class AnotacaoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable String id){
-        //Anotacao anotacao = anotacaoService.findById(id);
-        //anotacaoService.delete(anotacao);
+    public ResponseEntity<Void> deletar(@PathVariable String idQuadro, @PathVariable String id){
+        Quadro quadro = quadroService.findById(idQuadro);
+        List<Anotacao> anotacoes = quadro.getAnotacoes();
+        for(Anotacao anotacao : anotacoes){
+            System.out.println("entrou");
+            if (anotacao.getId().equals(id)) {
+                anotacaoHistoricoService.deletarVersoesDaAnotacao(anotacao.getId());
+                anotacoes.remove(anotacao);
+                quadroService.save(quadro);
+                break;
+            }
+        }
         return ResponseEntity.noContent().build();
     }
 

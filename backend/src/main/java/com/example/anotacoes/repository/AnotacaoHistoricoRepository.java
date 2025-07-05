@@ -11,4 +11,5 @@ public interface AnotacaoHistoricoRepository extends MongoRepository<AnotacaoHis
     List<AnotacaoHistorico> findAllByIdAnotacao(String id);
     Optional<AnotacaoHistorico> findByIdAnotacaoAndVersao(String id, long versao);
     long deleteByIdAnotacaoAndVersaoGreaterThan(String idAnotacao, long versao);
+    void deleteByIdAnotacao(String idAnotacao);
 }

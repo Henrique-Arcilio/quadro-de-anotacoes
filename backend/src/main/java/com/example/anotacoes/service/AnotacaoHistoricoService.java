@@ -44,6 +44,11 @@ public class AnotacaoHistoricoService {
     }
 
     @Transactional
+    public void deletarVersoesDaAnotacao(String idAnotacao){
+         repository.deleteByIdAnotacao(idAnotacao);
+    }
+
+    @Transactional
     public long deletarVersoesNovas(String idAnotacao, long versao){
         return repository.deleteByIdAnotacaoAndVersaoGreaterThan(idAnotacao, versao);
     }
