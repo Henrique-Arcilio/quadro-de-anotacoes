@@ -12,4 +12,5 @@ public class AnotacaoResponseDto {
     private String titulo;
     private String texto;
     private List<String> tags;
+    private String versao;
 }

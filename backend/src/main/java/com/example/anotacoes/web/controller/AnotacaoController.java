@@ -5,10 +5,7 @@ import com.example.anotacoes.entity.AnotacaoHistorico;
 import com.example.anotacoes.entity.Quadro;
 import com.example.anotacoes.service.AnotacaoHistoricoService;
 import com.example.anotacoes.service.QuadroService;
-import com.example.anotacoes.web.dto.AnotacaoCreateDto;
-import com.example.anotacoes.web.dto.AnotacaoHistoricoResponseDto;
-import com.example.anotacoes.web.dto.AnotacaoResponseDto;
-import com.example.anotacoes.web.dto.AnotacaoUpdateDto;
+import com.example.anotacoes.web.dto.*;
 import com.example.anotacoes.web.mapper.AnotacaoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -61,11 +58,11 @@ public class AnotacaoController {
                 historico.setIdQuadro(quadro.getId());
                 long versao = anotacaoHistoricoService.calcularVersao(anotacao);
                 historico.setVersao(versao);
+                anotacaoHistoricoService.save(historico);
+                quadroService.save(quadro);
                 break;
             }
         }
-        anotacaoHistoricoService.save(historico);
-        quadroService.save(quadro);
         return ResponseEntity.noContent().build();
     }
 
@@ -82,4 +79,22 @@ public class AnotacaoController {
         List<AnotacaoHistoricoResponseDto> anotacaoResponseDtos = AnotacaoMapper.getAllVersions(anotacaoHistoricos);
         return ResponseEntity.ok().body(anotacaoResponseDtos);
     }
+
+    @PutMapping("{idAnotacao}/versoes/{versao}")
+    public ResponseEntity<AnotacaoRollBackDto> voltarParaUmaVersão(@PathVariable String idQuadro, @PathVariable String idAnotacao, @PathVariable long versao){
+        Quadro quadro = quadroService.findById(idQuadro);
+        AnotacaoHistorico versaoDoHistorico = anotacaoHistoricoService.buscarUmaVersao(idAnotacao, versao);
+        long versoesDeletadas = 0;
+        for(Anotacao anotacao : quadro.getAnotacoes()){
+            if(anotacao.getId().equals(idAnotacao)){
+                AnotacaoMapper.updateVersao(anotacao, versaoDoHistorico);
+                versoesDeletadas = anotacaoHistoricoService.deletarVersoesNovas(idAnotacao, versao);
+                quadroService.save(quadro);
+                break;
+            }
+        }
+        AnotacaoRollBackDto rollBackDto = new AnotacaoRollBackDto(versoesDeletadas);
+        return ResponseEntity.ok().body(rollBackDto);
+    }
+
 }

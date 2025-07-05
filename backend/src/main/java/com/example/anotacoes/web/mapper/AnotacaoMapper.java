@@ -31,6 +31,13 @@ public class AnotacaoMapper {
         }
     }
 
+    public static Anotacao updateVersao(Anotacao anotacao, AnotacaoHistorico historico){
+        anotacao.setTitulo(historico.getTitulo());
+        anotacao.setTexto(historico.getTexto());
+        anotacao.setTags(historico.getTags());
+        return anotacao;
+    }
+
     public static AnotacaoResponseDto toDto(Anotacao anotacao){
         return new ModelMapper().map(anotacao, AnotacaoResponseDto.class);
     }
