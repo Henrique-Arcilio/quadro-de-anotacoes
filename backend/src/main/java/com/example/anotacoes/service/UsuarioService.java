@@ -1,14 +1,11 @@
 package com.example.anotacoes.service;
 
-import com.example.anotacoes.entity.Anotacao;
-import com.example.anotacoes.entity.Quadro;
 import com.example.anotacoes.entity.Usuario;
 import com.example.anotacoes.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +22,7 @@ public class UsuarioService {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("O id informado não existe"));
     }
-
+    @Transactional
     public void delete(Usuario usuario) {
         usuarioRepository.deleteById(usuario.getId());
     }
