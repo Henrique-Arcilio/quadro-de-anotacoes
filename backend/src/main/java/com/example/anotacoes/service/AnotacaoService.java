@@ -17,7 +17,6 @@ public class AnotacaoService {
 
     @Transactional
     public Anotacao save(Anotacao anotacao){
-        anotacao.setId(UUID.randomUUID().toString());
         return repository.save(anotacao);
     }
 
@@ -30,5 +29,6 @@ public class AnotacaoService {
     public void delete(Anotacao anotacao) {
         repository.deleteById(anotacao.getId());
     }
+
 
 }

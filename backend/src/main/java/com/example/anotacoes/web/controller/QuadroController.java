@@ -26,7 +26,7 @@ public class QuadroController {
         Quadro quadro = quadroService.save(QuadroMapper.fromDto(quadroCreateDto));
         Usuario usuario = usuarioService.findById(idUsuario);
         usuario.getQuadros().add(quadro.getId());
-        usuario = usuarioService.save(usuario);
+        usuarioService.save(usuario);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(quadro.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }

@@ -1,6 +1,7 @@
 package com.example.anotacoes.service;
 
 import com.example.anotacoes.entity.Anotacao;
+import com.example.anotacoes.entity.Quadro;
 import com.example.anotacoes.entity.Usuario;
 import com.example.anotacoes.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ public class UsuarioService {
 
     @Transactional
     public Usuario save(Usuario usuario){
-        usuario.setId(UUID.randomUUID().toString());
         return usuarioRepository.save(usuario);
     }
 
@@ -26,7 +26,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("O id informado não existe"));
     }
 
-    public void delete(Anotacao anotacao) {
-        usuarioRepository.deleteById(anotacao.getId());
+    public void delete(Usuario usuario) {
+        usuarioRepository.deleteById(usuario.getId());
     }
 }
