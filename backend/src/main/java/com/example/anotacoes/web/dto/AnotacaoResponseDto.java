@@ -9,8 +9,8 @@ import java.util.List;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class AnotacaoResponseDto {
+    private String id;
     private String titulo;
     private String texto;
     private List<String> tags;
-    private String versao;
 }

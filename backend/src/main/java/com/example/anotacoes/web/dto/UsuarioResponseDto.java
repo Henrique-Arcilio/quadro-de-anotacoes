@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioResponseDto {
+    private String id;
     public String nome;
     private List<String> quadros;
 }

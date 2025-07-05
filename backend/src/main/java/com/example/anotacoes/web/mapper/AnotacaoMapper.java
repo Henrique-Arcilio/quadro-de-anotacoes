@@ -42,10 +42,18 @@ public class AnotacaoMapper {
         return new ModelMapper().map(anotacao, AnotacaoResponseDto.class);
     }
 
-    public static List<AnotacaoHistoricoResponseDto> getAllVersions(List<AnotacaoHistorico> todoHistorico){
+    public static List<AnotacaoHistoricoResponseDto> getListaVersoesDto(List<AnotacaoHistorico> todoHistorico){
         List<AnotacaoHistoricoResponseDto> versoesAnotacao = new ArrayList<>();
         for(AnotacaoHistorico historico : todoHistorico){
             AnotacaoHistoricoResponseDto anotacaoResponseDto =  new ModelMapper().map(historico, AnotacaoHistoricoResponseDto.class);
+            versoesAnotacao.add(anotacaoResponseDto);
+        }
+        return versoesAnotacao;
+    }
+    public static List<AnotacaoResponseDto> getListaDto(List<Anotacao> anotacoes){
+        List<AnotacaoResponseDto> versoesAnotacao = new ArrayList<>();
+        for(Anotacao anotacao : anotacoes ){
+            AnotacaoResponseDto anotacaoResponseDto =  new ModelMapper().map(anotacao, AnotacaoResponseDto.class);
             versoesAnotacao.add(anotacaoResponseDto);
         }
         return versoesAnotacao;

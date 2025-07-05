@@ -42,6 +42,13 @@ public class AnotacaoController {
         return ResponseEntity.created(uri).build();
     }
 
+    @GetMapping
+    public ResponseEntity<List<AnotacaoResponseDto>> buscarTodasDoUsuario(@PathVariable String idQuadro){
+        Quadro quadro = quadroService.findById(idQuadro);
+        List<AnotacaoResponseDto> anotacoesResponseDto = AnotacaoMapper.getListaDto(quadro.getAnotacoes());
+        return ResponseEntity.ok().body(anotacoesResponseDto);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AnotacaoResponseDto> buscarPorId(@PathVariable String idQuadro, @PathVariable String id){
         Quadro quadro = quadroService.findById(idQuadro);
@@ -83,8 +90,7 @@ public class AnotacaoController {
     @GetMapping("/{id}/versoes")
     public ResponseEntity<List<AnotacaoHistoricoResponseDto>> buscarVersoes(@PathVariable String id){
         List<AnotacaoHistorico> anotacaoHistoricos = anotacaoHistoricoService.buscarVersoes(id);
-        List<AnotacaoHistoricoResponseDto> anotacaoResponseDtos = AnotacaoMapper.getAllVersions(anotacaoHistoricos);
-
+        List<AnotacaoHistoricoResponseDto> anotacaoResponseDtos = AnotacaoMapper.getListaVersoesDto(anotacaoHistoricos);
         return ResponseEntity.ok().body(anotacaoResponseDtos);
     }
 

@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuadroResponseDto {
+    private String id;
     public String titulo;
     public List<Anotacao> anotacoes;
 }
