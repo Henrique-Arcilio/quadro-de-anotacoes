@@ -3,9 +3,13 @@ package com.example.anotacoes.web.mapper;
 import com.example.anotacoes.entity.Anotacao;
 import com.example.anotacoes.entity.AnotacaoHistorico;
 import com.example.anotacoes.web.dto.AnotacaoCreateDto;
+import com.example.anotacoes.web.dto.AnotacaoHistoricoResponseDto;
 import com.example.anotacoes.web.dto.AnotacaoResponseDto;
 import com.example.anotacoes.web.dto.AnotacaoUpdateDto;
 import org.modelmapper.ModelMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnotacaoMapper {
 
@@ -29,6 +33,15 @@ public class AnotacaoMapper {
 
     public static AnotacaoResponseDto toDto(Anotacao anotacao){
         return new ModelMapper().map(anotacao, AnotacaoResponseDto.class);
+    }
+
+    public static List<AnotacaoHistoricoResponseDto> getAllVersions(List<AnotacaoHistorico> todoHistorico){
+        List<AnotacaoHistoricoResponseDto> versoesAnotacao = new ArrayList<>();
+        for(AnotacaoHistorico historico : todoHistorico){
+            AnotacaoHistoricoResponseDto anotacaoResponseDto =  new ModelMapper().map(historico, AnotacaoHistoricoResponseDto.class);
+            versoesAnotacao.add(anotacaoResponseDto);
+        }
+        return versoesAnotacao;
     }
 
     public static AnotacaoHistorico toHistorico(Anotacao anotacao){

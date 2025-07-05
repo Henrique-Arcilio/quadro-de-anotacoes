@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AnotacaoHistoricoService {
@@ -25,6 +27,10 @@ public class AnotacaoHistoricoService {
                 .orElseThrow(() -> new RuntimeException("O id informado não existe"));
     }
 
+    @Transactional(readOnly = true)
+    public List<AnotacaoHistorico> buscarVersoes(String id){
+        return repository.findAllByIdAnotacao(id);
+    }
     @Transactional(readOnly = true)
     public long calcularVersao(Anotacao anotacao){
         return repository.countByIdAnotacao(anotacao.getId()) + 1;

@@ -6,6 +6,7 @@ import com.example.anotacoes.entity.Quadro;
 import com.example.anotacoes.service.AnotacaoHistoricoService;
 import com.example.anotacoes.service.QuadroService;
 import com.example.anotacoes.web.dto.AnotacaoCreateDto;
+import com.example.anotacoes.web.dto.AnotacaoHistoricoResponseDto;
 import com.example.anotacoes.web.dto.AnotacaoResponseDto;
 import com.example.anotacoes.web.dto.AnotacaoUpdateDto;
 import com.example.anotacoes.web.mapper.AnotacaoMapper;
@@ -68,10 +69,17 @@ public class AnotacaoController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable String id){
         //Anotacao anotacao = anotacaoService.findById(id);
         //anotacaoService.delete(anotacao);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/versoes")
+    public ResponseEntity<List<AnotacaoHistoricoResponseDto>> buscarVersoes(@PathVariable String id){
+        List<AnotacaoHistorico> anotacaoHistoricos = anotacaoHistoricoService.buscarVersoes(id);
+        List<AnotacaoHistoricoResponseDto> anotacaoResponseDtos = AnotacaoMapper.getAllVersions(anotacaoHistoricos);
+        return ResponseEntity.ok().body(anotacaoResponseDtos);
     }
 }
