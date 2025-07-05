@@ -4,17 +4,17 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Anotacao {
+@Document(value = "quadros")
+public class Quadro {
     @Id
     private String id;
     private String titulo;
-    private String texto;
-    private List<String> tags;
+    private List<Anotacao> anotacoes = new ArrayList<>();
 }

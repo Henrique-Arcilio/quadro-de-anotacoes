@@ -13,7 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("api/v1/anotacoes")
+@RequestMapping("api/usuarios/{idUsuario}/quadros/{idQuadro}/anotacoes")
 @RequiredArgsConstructor
 public class AnotacaoController {
     private final AnotacaoService anotacaoService;
