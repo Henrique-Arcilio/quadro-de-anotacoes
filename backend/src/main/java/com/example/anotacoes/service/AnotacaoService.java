@@ -25,6 +25,7 @@ public class AnotacaoService {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("O id informado não existe"));
     }
+
     @Transactional
     public void delete(Anotacao anotacao) {
         repository.deleteById(anotacao.getId());

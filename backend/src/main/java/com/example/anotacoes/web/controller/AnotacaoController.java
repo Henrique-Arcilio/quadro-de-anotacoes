@@ -25,43 +25,45 @@ public class AnotacaoController {
 
     @PostMapping
     public ResponseEntity<Void> criar(@PathVariable String idQuadro, @RequestBody AnotacaoCreateDto anotacaoCreateDto){
+        Quadro quadro = quadroService.findById(idQuadro);
+
         Anotacao anotacao = AnotacaoMapper.fromDto(anotacaoCreateDto);
         anotacao.setId(UUID.randomUUID().toString());
-        Quadro quadro = quadroService.findById(idQuadro);
         quadro.getAnotacoes().add(anotacao);
+
         AnotacaoHistorico historico = AnotacaoMapper.toHistorico(anotacao);
         historico.setIdQuadro(quadro.getId());
         historico.setVersao(1);
+
         anotacaoHistoricoService.save(historico);
         quadroService.save(quadro);
-
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(anotacao.getId()).toUri();
+
         return ResponseEntity.created(uri).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnotacaoResponseDto> buscarPorId(@PathVariable String id){
-        //Anotacao anotacao = anotacaoService.findById(id);
-        return null;
+    public ResponseEntity<AnotacaoResponseDto> buscarPorId(@PathVariable String idQuadro, @PathVariable String id){
+        Quadro quadro = quadroService.findById(idQuadro);
+        Anotacao anotacao = quadroService.buscarAnotacao(quadro, id);
+
+        return ResponseEntity.ok().body(AnotacaoMapper.toDto(anotacao));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> atualizar(@PathVariable String idQuadro, @PathVariable String id, @RequestBody AnotacaoUpdateDto anotacaoUpdateDto){
         Quadro quadro = quadroService.findById(idQuadro);
-        List<Anotacao> anotacoes = quadro.getAnotacoes();
-        AnotacaoHistorico historico = null;
-        for(Anotacao anotacao : anotacoes){
-            if(anotacao.getId().equals(id)){
-                AnotacaoMapper.updateFromDto(anotacaoUpdateDto, anotacao);
-                historico = AnotacaoMapper.toHistorico(anotacao);
-                historico.setIdQuadro(quadro.getId());
-                long versao = anotacaoHistoricoService.calcularVersao(anotacao);
-                historico.setVersao(versao);
-                anotacaoHistoricoService.save(historico);
-                quadroService.save(quadro);
-                break;
-            }
-        }
+        Anotacao anotacao = quadroService.buscarAnotacao(quadro,id);
+
+        AnotacaoMapper.updateFromDto(anotacaoUpdateDto, anotacao);
+        AnotacaoHistorico historico = AnotacaoMapper.toHistorico(anotacao);
+        historico.setIdQuadro(quadro.getId());
+        long versao = anotacaoHistoricoService.calcularVersao(anotacao);
+        historico.setVersao(versao);
+
+        anotacaoHistoricoService.save(historico);
+        quadroService.save(quadro);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -69,15 +71,12 @@ public class AnotacaoController {
     public ResponseEntity<Void> deletar(@PathVariable String idQuadro, @PathVariable String id){
         Quadro quadro = quadroService.findById(idQuadro);
         List<Anotacao> anotacoes = quadro.getAnotacoes();
-        for(Anotacao anotacao : anotacoes){
-            System.out.println("entrou");
-            if (anotacao.getId().equals(id)) {
-                anotacaoHistoricoService.deletarVersoesDaAnotacao(anotacao.getId());
-                anotacoes.remove(anotacao);
-                quadroService.save(quadro);
-                break;
-            }
-        }
+        anotacaoHistoricoService.deletarVersoesDaAnotacao(id);
+
+        Anotacao anotacao = quadroService.buscarAnotacao(quadro, id);
+        anotacoes.remove(anotacao);
+        quadroService.save(quadro);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -85,22 +84,21 @@ public class AnotacaoController {
     public ResponseEntity<List<AnotacaoHistoricoResponseDto>> buscarVersoes(@PathVariable String id){
         List<AnotacaoHistorico> anotacaoHistoricos = anotacaoHistoricoService.buscarVersoes(id);
         List<AnotacaoHistoricoResponseDto> anotacaoResponseDtos = AnotacaoMapper.getAllVersions(anotacaoHistoricos);
+
         return ResponseEntity.ok().body(anotacaoResponseDtos);
     }
 
     @PutMapping("{idAnotacao}/versoes/{versao}")
     public ResponseEntity<AnotacaoRollBackDto> voltarParaUmaVersão(@PathVariable String idQuadro, @PathVariable String idAnotacao, @PathVariable long versao){
         Quadro quadro = quadroService.findById(idQuadro);
+        Anotacao anotacao = quadroService.buscarAnotacao(quadro, idAnotacao);
         AnotacaoHistorico versaoDoHistorico = anotacaoHistoricoService.buscarUmaVersao(idAnotacao, versao);
+
         long versoesDeletadas = 0;
-        for(Anotacao anotacao : quadro.getAnotacoes()){
-            if(anotacao.getId().equals(idAnotacao)){
-                AnotacaoMapper.updateVersao(anotacao, versaoDoHistorico);
-                versoesDeletadas = anotacaoHistoricoService.deletarVersoesNovas(idAnotacao, versao);
-                quadroService.save(quadro);
-                break;
-            }
-        }
+        AnotacaoMapper.updateVersao(anotacao, versaoDoHistorico);
+        versoesDeletadas = anotacaoHistoricoService.deletarVersoesNovas(idAnotacao, versao);
+        quadroService.save(quadro);
+
         AnotacaoRollBackDto rollBackDto = new AnotacaoRollBackDto(versoesDeletadas);
         return ResponseEntity.ok().body(rollBackDto);
     }
