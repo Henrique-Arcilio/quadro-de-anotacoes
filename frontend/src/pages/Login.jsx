@@ -16,6 +16,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
+        id: '',
         login: '',
         senha: ''
     });
@@ -30,8 +31,9 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.post('http://localhost:8080/api/auth', formData)
-        .then(() => {
-            
+        .then((res) => {
+            console.log(res);
+            localStorage.setItem('userId', res.data.id);
             navigate('/quadros');
         })
         .catch((erro) => {

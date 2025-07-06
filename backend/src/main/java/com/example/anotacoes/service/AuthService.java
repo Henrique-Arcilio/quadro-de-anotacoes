@@ -19,7 +19,8 @@ public class AuthService {
     public ResponseEntity<Usuario> login(AuthLoginDto authLoginDto){
         Optional<Usuario> existente = usuarioRepository.findByLogin(authLoginDto.getLogin());
         if (existente.isPresent() && existente.get().getSenha().equals(authLoginDto.getSenha())){
-            return ResponseEntity.ok().build();
+            System.out.println(existente.get());
+            return ResponseEntity.ok().body(existente.get());
         }
         return ResponseEntity.notFound().build();
     }

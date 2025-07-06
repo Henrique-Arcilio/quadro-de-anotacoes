@@ -5,11 +5,12 @@ import com.example.anotacoes.entity.Quadro;
 import com.example.anotacoes.entity.Usuario;
 import com.example.anotacoes.repository.QuadroRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -37,5 +38,19 @@ public class QuadroService {
         }
         throw new RuntimeException("Esse id de anotação não existe ");
 
+    }
+
+    public List<Quadro> buscar(Usuario usuario){
+        List<String> idQuadros = usuario.getQuadros();
+        List<Quadro> quadros = new ArrayList<>();
+
+        for (String id : idQuadros) {
+            Optional<Quadro> quadro = quadroRepository.findById(id);
+            if (quadro.isPresent()){
+                quadros.add(quadro.get());
+            }
+        }
+
+        return quadros;
     }
 }

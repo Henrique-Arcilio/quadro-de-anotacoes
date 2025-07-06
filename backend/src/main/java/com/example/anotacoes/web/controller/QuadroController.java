@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/usuarios/{idUsuario}/quadros")
@@ -35,5 +36,12 @@ public class QuadroController {
     public ResponseEntity<QuadroResponseDto> buscarPorId(@PathVariable String id){
         Quadro quadro = quadroService.findById(id);
         return ResponseEntity.ok().body(QuadroMapper.toDto(quadro));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Quadro>> buscar(@PathVariable String idUsuario){
+        Usuario usuario = usuarioService.findById(idUsuario);
+        List<Quadro> listQuadros = quadroService.buscar(usuario);
+        return ResponseEntity.ok().body(listQuadros);
     }
 }

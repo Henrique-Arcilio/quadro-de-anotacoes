@@ -1,134 +1,123 @@
-import * as React from 'react';
-import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle
-} from '@mui/material';
+
+import CustomDialog from '../components/CustomDilog';
+import CustomAddButtom from '../components/CustomAddButtom'
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+
 
 const Quadros = () => {
   const [open, setOpen] = React.useState(false);
+  const userId = localStorage.getItem('userId');
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [quadros, setQuadros] = useState([
+    { id: 1, titulo: 'Estudo sobre MongoDB' },
+    
+  ]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const nome = formJson.nome;
-    axios.post('')
-    handleClose();
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/usuarios/${userId}/quadros`)
+      .then((response) => setQuadros(response.data))
+      .catch((error) => console.error("Erro ao buscar dados:", error));
+  }, [userId]);
+
+
+  const handleCriarQuadro = (nomeDoQuadro) => {
+    axios.post(`http://localhost:8080/api/usuarios/${userId}/quadros`, {
+      titulo: nomeDoQuadro,
+      userId: userId 
+    })
+    .then(() => {
+      
+    })
+    .catch((err) => {
+      console.error('Erro ao criar quadro:', err);
+    });
   };
 
   return (
-    <React.Fragment>
-      <Button
-        variant="outlined"
-        onClick={handleClickOpen}
-        sx={{
-          color: '#8234E9',
-          borderColor: '#8234E9',
-          '&:hover': {
-            backgroundColor: '#8234E910',
-            borderColor: '#8234E9'
-          }
-        }}
-      >
-        Criar Quadro
-      </Button>
+    <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            width: '100vw',
+            backgroundColor: 'primary',
+            fontFamily: 'ubuntu'
+        }}>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: {
-            backgroundColor: '#252525',
-            borderRadius: '16px',
-            color: '#fff',
-            fontFamily: 'Ubuntu'
-          }
-        }}
-      >
-        <DialogTitle
-          sx={{
-            fontSize: '20px',
-            fontWeight: '600',
-            color: '#fff'
-          }}
-        >
-          Novo Quadro
-        </DialogTitle>
+            <div style={{
+                width: '100vw',
+                height: '15vh'
+            
+            }}>
+                <h1 style={{
+                    textAlign: 'initial',
+                    fontSize: '30px',
+                    fontWeight: '500',
+                    color: '#ffffff',
+                    marginLeft: '30px'
 
-        <DialogContent sx={{ paddingBottom: 0 }}>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              id="name"
-              name="nome"
-              label="Nome do Quadro"
-              type="text"
-              fullWidth
-              variant="outlined"
-              sx={{
-                input: { color: '#fff' },
-                label: { color: '#bbb' },
-                '& label.Mui-focused': { color: '#8234E9' },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#444'
-                  },
-                  '&:hover fieldset': {
-                    borderColor: '#8234E9'
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#8234E9'
-                  }
-                }
-              }}
-            />
+                }}>
+                    Quadros
+                </h1>
+            </div>
 
-            <DialogActions sx={{ marginTop: 2 }}>
-              <Button
-                onClick={handleClose}
-                sx={{
-                  color: '#aaa',
-                  '&:hover': {
-                    backgroundColor: '#333'
-                  }
-                }}
-              >
-                Cancelar
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                    
-                    backgroundColor: '#8234E9',
-                    color: '#fff',
-                    '&:hover': {
-                        backgroundColor: '#6e27cc'
-                  }
-                }}
-              >
-                Criar
-              </Button>
-            </DialogActions>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </React.Fragment>
+            <div style={{
+                height: '73vh',
+                width: '100vw',
+                justifyContent:'center',
+                padding: '40px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '10px'
+            }}>
+                 {quadros.map((quadro) => (
+                    <div
+                        key={quadro.id}
+                        style={{
+                        width: '200px',
+                        height: '200px',
+                        padding: '20px',
+                        backgroundColor: '#252525',
+                        color: '#fff',
+                        borderRadius: '20px',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                        fontFamily: 'Ubuntu',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        }}
+                    >
+                        <h2>{quadro.titulo}</h2>
+                    </div>
+                    ))}
+                
+            </div>
+
+            <div style={{
+                position: 'fixed',
+                bottom: '24px',
+                right: '24px',
+                zIndex: 1000 
+                }}>
+                <CustomAddButtom
+                    onClick={handleClickOpen}
+                />
+
+                <CustomDialog
+                    open={open}
+                    onClose={handleClose}
+                    onSubmit={handleCriarQuadro}
+                />
+            </div>
+
+        </div>
   );
 };
 
