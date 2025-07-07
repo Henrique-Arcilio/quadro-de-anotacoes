@@ -17,7 +17,7 @@ export default function CustomAddButton({ onClick }) {
         borderRadius: '12px'
       }}
     >
-      <AddIcon fontSize="large" />
+      <AddIcon />
     </IconButton>
   );
 }
