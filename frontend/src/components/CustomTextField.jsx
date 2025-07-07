@@ -1,7 +1,7 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
 
-export default function CustomTextField({ label, name, value, onChange, type = 'text', ...rest }) {
+export default function CustomTextField({ label, name, value, onChange, type, ...rest }) {
   return (
     <TextField
       label={label}
@@ -11,7 +11,7 @@ export default function CustomTextField({ label, name, value, onChange, type = '
       type={type}
       variant="outlined"
       fullWidth
-      required
+      
       sx={{
         marginBottom: '16px',
         '& .MuiOutlinedInput-root': {
@@ -33,9 +33,10 @@ export default function CustomTextField({ label, name, value, onChange, type = '
         '& label.Mui-focused': {
           color: '#FFF',
         },
-        '& input': {
+        '& input, & textarea': {
           color: '#fff',
         },
+
       }}
       {...rest} 
     />

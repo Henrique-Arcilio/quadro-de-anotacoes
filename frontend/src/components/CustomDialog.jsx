@@ -8,7 +8,7 @@ import {
   TextField
 } from '@mui/material';
 
-export default function CustomDialog({ open, onClose, onSubmit }) {
+export default function CustomDialog({ open, onClose, onSubmit, titulo, label }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -37,7 +37,7 @@ export default function CustomDialog({ open, onClose, onSubmit }) {
           color: '#fff'
         }}
       >
-        Novo Quadro
+        {titulo}
       </DialogTitle>
 
       <DialogContent sx={{ paddingBottom: 0 }}>
@@ -47,7 +47,7 @@ export default function CustomDialog({ open, onClose, onSubmit }) {
             required
             margin="dense"
             name="nome"
-            label="Nome do Quadro"
+            label={label}
             type="text"
             fullWidth
             variant="outlined"

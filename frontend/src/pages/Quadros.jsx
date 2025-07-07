@@ -1,27 +1,35 @@
 
-import CustomDialog from '../components/CustomDilog';
-import CustomAddButtom from '../components/CustomAddButtom'
+import CustomDialog from '../components/CustomDialog';
+import CustomAddButtom from '../components/CustomAddButtom';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 
 
 const Quadros = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const userId = localStorage.getItem('userId');
-
+  const [quadros, setQuadros] = useState([]);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [quadros, setQuadros] = useState([
-    { id: 1, titulo: 'Estudo sobre MongoDB' },
-    
-  ]);
+  const handleCardClick = (id, titulo) => {
+    localStorage.setItem('quadroId', id);
+    localStorage.setItem('quadroTitulo', titulo);
+    navigate(`/quadro`);
+  };
 
-  useEffect(() => {
+  const fetchQuadros = () => {
     axios
       .get(`http://localhost:8080/api/usuarios/${userId}/quadros`)
       .then((response) => setQuadros(response.data))
       .catch((error) => console.error("Erro ao buscar dados:", error));
+  };
+
+
+  useEffect(() => {
+    fetchQuadros();
   }, [userId]);
 
 
@@ -31,7 +39,7 @@ const Quadros = () => {
       userId: userId 
     })
     .then(() => {
-      
+      fetchQuadros();
     })
     .catch((err) => {
       console.error('Erro ao criar quadro:', err);
@@ -79,6 +87,7 @@ const Quadros = () => {
                  {quadros.map((quadro) => (
                     <div
                         key={quadro.id}
+                        onClick={() => handleCardClick(quadro.id, quadro.titulo)}
                         style={{
                         width: '200px',
                         height: '200px',
@@ -92,12 +101,15 @@ const Quadros = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         textAlign: 'center',
-                        }}
+                        cursor: 'pointer', 
+                        transition: 'transform 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
+                      onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                     >
                         <h2>{quadro.titulo}</h2>
                     </div>
                     ))}
-                
             </div>
 
             <div style={{
@@ -114,9 +126,10 @@ const Quadros = () => {
                     open={open}
                     onClose={handleClose}
                     onSubmit={handleCriarQuadro}
+                    titulo="Novo Quadro"
+                    label="Nome do Quadro"
                 />
             </div>
-
         </div>
   );
 };

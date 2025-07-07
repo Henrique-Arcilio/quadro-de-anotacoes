@@ -6,6 +6,7 @@ import theme from './theme/theme';
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import Quadros from  './pages/Quadros'
+import Quadro from  './pages/Quadro'
 import './index.css';
 
 function App() {
@@ -14,9 +15,11 @@ function App() {
         <CssBaseline />
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path='/cadastro' element={<Cadastro />} />
             <Route path='/quadros' element={<Quadros />} />
+            <Route path='/quadro' element={<Quadro />} />
           </Routes>
         </BrowserRouter>
      </ThemeProvider>
