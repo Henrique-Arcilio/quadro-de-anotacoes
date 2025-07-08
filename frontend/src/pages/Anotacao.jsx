@@ -1,133 +1,81 @@
-import { IconButton } from "@mui/material";
+// src/pages/Anotacao.jsx
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {useState} from "react";
-import {useNavigate} from 'react-router-dom';
-
-import ArrowBackIosNewRounded from "@mui/icons-material/ArrowBackIosRounded";
-import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-
-import * as React from 'react';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import MongoTexto from "../components/CustomAnotacao";
+import { TextField } from "@mui/material";
 
 const Anotacao = () => {
-    return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-            width: '100vw',
-            backgroundColor: 'primary',
-            fontFamily: 'ubuntu'
-        }}>
-            <div
-                style={{
-                    position: 'fixed',
-                    top: '24px',
-                    alignSelf: 'center',
-                    display:"flex"
-                }}
-            >
-                <div>
-                    <IconButton
-                        sx={{
-                        backgroundColor: '#8234E9',
-                        width: '50px',
-                        height: '50px',
-                        '&:hover': {
-                            backgroundColor: '#5C22A8'
-                        },
-                        color: '#fff',
-                        borderRadius: '12px'
-                        }}
-                    >
-                        <ArrowBackIosNewRounded />
-                    </IconButton>
-                </div>
-                <div>
-                    <h3
-                    style={{
-                        color: "#fff"
+  const anotacaoId = localStorage.getItem("anotacaoId");
+  const quadroId = localStorage.getItem("quadroId");
+  const userId = localStorage.getItem("userId");
+  const quadroTitulo = localStorage.getItem("quadroTitulo");
+  const navigate = useNavigate();
 
-                    }}
-                   >
-                    Pagina Anotacoes</h3>
-                </div>
-                <div>
-                    <IconButton
-                        sx={{
-                        backgroundColor: '#8234E9',
-                        width: '50px',
-                        height: '50px',
-                        '&:hover': {
-                            backgroundColor: '#5C22A8'
-                        },
-                        color: '#fff',
-                        borderRadius: '12px'
-                        }}
-                    >
-                        <SaveRoundedIcon />
-                    </IconButton>
+  const [texto, setTexto] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const [tags, setTags] = useState("");
+  const [versoes, setVersoes] = useState([]);
+  const [versaoSelecionada, setVersaoSelecionada] = useState("");
 
-                    <IconButton
-                        sx={{
-                        backgroundColor: '#8234E9',
-                        width: '50px',
-                        height: '50px',
-                        '&:hover': {
-                            backgroundColor: '#5C22A8'
-                        },
-                        color: '#fff',
-                        borderRadius: '12px'
-                        }}
-                    >
-                        <DeleteRoundedIcon />
-                    </IconButton>
+  useEffect(() => {
+    axios
+      .get(
+        `http://localhost:8080/api/usuarios/${userId}/quadros/${quadroId}/anotacoes/${anotacaoId}`
+      )
+      .then((res) => setTexto(res.data.texto))
+      .catch((err) => console.error(err));
+  }, [userId, quadroId, anotacaoId]);
 
-                    <div>
-                        <FormControl variant="filled" sx={{ m: 1, minWidth: 120,  color:'#fff'}}>
-                            <InputLabel 
-                            id="demo-simple-select-filled-label"
-                                sx={{
-                                    color:'#fff',
-                                    '&.Mui-focused':{color: '#fff'}
-                                }} 
-                            >Age</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-filled-label"
-                                id="demo-simple-select-filled"
-                                //value={age}
-                                //onChange={handleChange}
-                                sx= {{
-                                    color: '#fff',
-                                    background: '#8234E9',
-                                    '&.Mui-Focused .MuiOutlineInpur-notchedOutline': {
-                                        background: '#8234E960'
-                                    }
-                                }}
-                            >
-                            <MenuItem value=""
-                                sx= {{
-                                    color: '#fff'
-                                }}
-                            >
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem sx= {{color: '#fff'}}value={10}>Ten</MenuItem>
-                            <MenuItem sx= {{color: '#fff'}}value={20}>Twenty</MenuItem>
-                            <MenuItem sx= {{color: '#fff'}}value={30}>Thirty</MenuItem>
-                            </Select>
-                    </FormControl>
-                    </div>
-                </div>
-            </div>
+  useEffect(() => {
+    axios
+      .get(
+        `http://localhost:8080/api/usuarios/${userId}/quadros/${quadroId}/anotacoes/${anotacaoId}/versoes`
+      )
+      .then((res) => setVersoes(res.data))
+      .catch((err) => console.error(err));
+  }, [userId, quadroId, anotacaoId]);
 
-        </div>
-    );
-}
+  const handleSave = () => {
+    axios.put(
+    `http://localhost:8080/api/usuarios/${userId}/quadros/${quadroId}/anotacoes/${anotacaoId}`,
+    {
+        texto: texto || setTexto, 
+        titulo: titulo || setTitulo,     
+        
+    }
+)
+
+  };
+
+  const handleVersaoChange = (e) => {
+    const versao = e.target.value;
+    setVersaoSelecionada(versao);
+    const v = versoes.find((v) => v.versao === versao);
+    if (v) setTexto(v.texto);
+  };
+
+  const handleDelete = () => {
+    console.log("Lógica de deletar vai aqui");
+  };
+
+  const handleBack = () => {
+    navigate("/quadro");
+  };
+
+  return (
+
+    <MongoTexto
+      texto={texto}
+      versoes={versoes}
+      versaoSelecionada={versaoSelecionada}
+      onTextoChange={(e) => setTexto(e.target.value)}
+      onVersaoChange={handleVersaoChange}
+      onSave={handleSave}
+      onDelete={handleDelete}
+      onBack={handleBack}
+    />
+  );
+};
 
 export default Anotacao;

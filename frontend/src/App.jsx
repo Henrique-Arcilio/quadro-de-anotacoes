@@ -16,12 +16,12 @@ function App() {
         <CssBaseline />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Anotacao />} />
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path='/cadastro' element={<Cadastro />} />
             <Route path='/quadros' element={<Quadros />} />
             <Route path='/quadro' element={<Quadro />} />
-
+            <Route path='/anotacao' element={<Anotacao />} />
           </Routes>
         </BrowserRouter>
      </ThemeProvider>

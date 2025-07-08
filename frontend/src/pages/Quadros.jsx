@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import {useNavigate} from 'react-router-dom';
 
 
+
 const Quadros = () => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -86,9 +87,9 @@ const Quadros = () => {
             }}>
                  {quadros.map((quadro) => (
                     <div
-                        key={quadro.id}
-                        onClick={() => handleCardClick(quadro.id, quadro.titulo)}
-                        style={{
+                      key={quadro.id}
+                      onClick={() => handleCardClick(quadro.id, quadro.titulo)}
+                      style={{
                         width: '200px',
                         height: '200px',
                         padding: '20px',
@@ -98,17 +99,30 @@ const Quadros = () => {
                         boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
                         fontFamily: 'Ubuntu',
                         display: 'flex',
+                        flexDirection: 'column',
                         alignItems: 'center',
-                        justifyContent: 'center',
+                        justifyContent: 'flex-start',
                         textAlign: 'center',
-                        cursor: 'pointer', 
+                        cursor: 'pointer',
                         transition: 'transform 0.2s ease',
+                        overflow: 'hidden' // ← impede o conteúdo de ultrapassar o card
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
                       onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                     >
-                        <h2>{quadro.titulo}</h2>
-                    </div>
+                      <div
+                        style={{
+                          overflow: 'auto', // ← faz o conteúdo rolar internamente
+                          maxHeight: '100%', // ← garante que o conteúdo fique dentro do card
+                          width: '100%'
+                        }}
+                      >
+                         <h2 style={{
+                            wordWrap: 'break-word',
+                            margin: 0
+                          }}>{quadro.titulo}</h2>
+                        </div>
+                      </div>
                     ))}
             </div>
 

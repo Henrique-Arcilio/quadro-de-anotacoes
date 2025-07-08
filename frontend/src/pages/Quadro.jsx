@@ -38,6 +38,10 @@ const Quadro = () => {
         });
     };
 
+    const handleCardClick = (anotacao) => {
+        localStorage.setItem('anotacaoId', anotacao.id);
+        navigate('/anotacao');
+    }
 
     return(
         <div style={{
@@ -80,33 +84,34 @@ const Quadro = () => {
                     <div
                         key={anotacao.titulo}
                         style={{
-                        width: '300px',
-                        height: '300px',
-                        padding: '15px',
-                        backgroundColor: '#252525',
-                        color: '#fff',
-                        borderRadius: '20px',
-                        boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                        fontFamily: 'Ubuntu',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        cursor: 'pointer', 
-                        transition: 'transform 0.2s ease',
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
-                      onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                    >
+                            width: '350px',
+                            height: '350px',
+                            padding: '15px',
+                            backgroundColor: '#252525',
+                            color: '#fff',
+                            borderRadius: '20px',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                            fontFamily: 'Ubuntu',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            cursor: 'pointer',
+                            transition: 'transform 0.2s ease',
+                            overflow: 'hidden'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                        >
                         <h3>{anotacao.titulo}</h3>
 
                         <div style={{ 
                             display: 'flex', 
                             flexWrap: 'wrap', 
                             gap: '4px'
-                             }}>
-                        {anotacao.tags && anotacao.tags.map((tag, index) => (
+                        }}>
+                            {anotacao.tags && anotacao.tags.map((tag, index) => (
                             <span
-                            key={index}
-                            style={{
+                                key={index}
+                                style={{
                                 backgroundColor: '#8234E940',
                                 color: '#9F50FF',
                                 padding: '4px 8px',
@@ -114,27 +119,38 @@ const Quadro = () => {
                                 fontSize: '12px',
                                 fontWeight: 'bold',
                                 display: 'inline-block'
-                            }}
+                                }}
                             >
-                            {tag}
+                                {tag}
                             </span>
-                        ))}
+                            ))}
                         </div>
 
-                        <p>{anotacao.texto}</p>
+                        <div
+                            style={{
+                            overflow: 'auto',
+                            flexGrow: 1,
+                            marginTop: '10px',
+                            marginBottom: '50px',
+                            whiteSpace: 'pre-wrap',
+                            wordBreak: 'break-word'
+                            }}
+                        >
+                            {anotacao.texto}
+                        </div>
 
                         <div style={{
                             position: 'fixed',
                             bottom: '24px',
                             right: '24px',
                             zIndex: 1000 
-                            }}>
+                        }}>
                             <CustomEditIcon
-                                onClick={console.log(anotacao.titulo)}
+                            onClick={() => handleCardClick(anotacao)}
                             />
-        
                         </div>
-                    </div>
+                        </div>
+
                     ))}
             </div>
             <div style={{

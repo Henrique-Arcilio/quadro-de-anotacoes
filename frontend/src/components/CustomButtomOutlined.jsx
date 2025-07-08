@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 
-export default function CustomButtomOutlined({variant, color, onClick, startIcon}) {
+export default function CustomButtomOutlined({variant, color, onClick, startIcon, texto}) {
     return(
         <Button
             variant= {variant}
@@ -25,7 +25,7 @@ export default function CustomButtomOutlined({variant, color, onClick, startIcon
             onClick={onClick}
         >
             
-            Sign Up
+            {texto}
         </Button>
     );
 }
