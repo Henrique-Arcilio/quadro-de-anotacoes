@@ -56,7 +56,12 @@ const Anotacao = () => {
   };
 
   const handleDelete = () => {
-    console.log("Lógica de deletar vai aqui");
+    axios
+      .delete(
+        `http://localhost:8080/api/usuarios/${userId}/quadros/${quadroId}/anotacoes/${anotacaoId}`
+      )
+      .then(handleBack)
+      .catch((err) => console.error(err));
   };
 
   const handleBack = () => {
