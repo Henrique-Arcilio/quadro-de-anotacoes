@@ -25,6 +25,7 @@ public class AnotacaoController {
 
     @PostMapping
     public ResponseEntity<Void> criar(@PathVariable String idQuadro, @RequestBody AnotacaoCreateDto anotacaoCreateDto){
+        System.out.println("Entrou aqui no criar");
         Quadro quadro = quadroService.findById(idQuadro);
 
         Anotacao anotacao = AnotacaoMapper.fromDto(anotacaoCreateDto);

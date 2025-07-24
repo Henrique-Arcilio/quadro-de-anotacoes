@@ -24,6 +24,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Void> criar(@RequestBody UsuarioCreateDto usuarioCreateDto){
+        System.out.println("Entrou aqui no criar usuario");
         Usuario usuario = usuarioService.save(UsuarioMapper.fromDto(usuarioCreateDto));
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()

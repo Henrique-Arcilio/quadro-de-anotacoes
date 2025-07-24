@@ -1,10 +1,10 @@
 spring:
     application:
-        name: teste
+        name: anotacoes
 
     data:
         mongodb:
-            uri: mongodb://localhost/projeto-anotacoes
+            uri: mongodb://localhost:27017/projeto-anotacoes
 
 logging:
     level:
