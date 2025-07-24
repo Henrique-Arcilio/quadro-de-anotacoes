@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import CustomEditIcon from '../components/CustomEditIcon';
 import CustomAddButtom from '../components/CustomAddButtom';
 import CustomDialogAnotacao from '../components/CustomDialogAnotacao';
+import api from '../api';
 
 const Quadro = () => {
     const navigate = useNavigate();
@@ -16,8 +17,8 @@ const Quadro = () => {
     const handleClickOpen = () => setOpen(true);
 
     const fetchAnotacoes = () => {
-    axios
-      .get(`http://localhost:8080/api/usuarios/${userId}/quadros/${quadroId}/anotacoes`)
+    api
+      .get(`/usuarios/${userId}/quadros/${quadroId}/anotacoes`)
       .then((response) => setAnotacoes(response.data))
       .catch((error) => console.error("Erro ao buscar dados:", error));
     };
@@ -27,7 +28,7 @@ const Quadro = () => {
     }, [userId, quadroId]);
 
     const handleCriarAnotacao = (anotacao) => {
-        axios.post(`http://localhost:8080/api/usuarios/${userId}/quadros/${quadroId}/anotacoes`, {
+        api.post(`/usuarios/${userId}/quadros/${quadroId}/anotacoes`, {
             ...anotacao,
             userId,
             quadroId

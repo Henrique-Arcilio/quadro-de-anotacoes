@@ -6,9 +6,9 @@ import CustomButtonContained from '../components/CustomButtonContained';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import LoginIcon from '@mui/icons-material/Login'
 
-import axios from "axios";
 import {useState} from "react";
 import {useNavigate} from 'react-router-dom';
+import api from '../api';
 
 const Cadastro = () => {
 
@@ -29,7 +29,7 @@ const Cadastro = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8080/api/usuarios', formData)
+        api.post('/usuarios', formData)
         .then(() => {
             navigate('/login')
         })

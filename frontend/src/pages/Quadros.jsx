@@ -1,7 +1,7 @@
 
 import CustomDialog from '../components/CustomDialog';
 import CustomAddButtom from '../components/CustomAddButtom';
-import axios from 'axios';
+import api from '../api';
 import React, { useState, useEffect } from 'react';
 import {useNavigate} from 'react-router-dom';
 
@@ -22,8 +22,8 @@ const Quadros = () => {
   };
 
   const fetchQuadros = () => {
-    axios
-      .get(`http://localhost:8080/api/usuarios/${userId}/quadros`)
+    api
+      .get(`/usuarios/${userId}/quadros`)
       .then((response) => setQuadros(response.data))
       .catch((error) => console.error("Erro ao buscar dados:", error));
   };
@@ -35,7 +35,7 @@ const Quadros = () => {
 
 
   const handleCriarQuadro = (nomeDoQuadro) => {
-    axios.post(`http://localhost:8080/api/usuarios/${userId}/quadros`, {
+    api.post(`/usuarios/${userId}/quadros`, {
       titulo: nomeDoQuadro,
       userId: userId 
     })

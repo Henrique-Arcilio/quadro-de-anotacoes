@@ -5,8 +5,7 @@ import CustomButtonContained from '../components/CustomButtonContained';
 
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import LoginIcon from '@mui/icons-material/Login';
-
-import axios from "axios";
+import api from '../api';
 import {useState} from "react";
 import {useNavigate} from 'react-router-dom';
 
@@ -30,7 +29,7 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8080/api/auth', formData)
+        api.post('/auth', formData)
         .then((res) => {
             console.log(res);
             localStorage.setItem('userId', res.data.id);
